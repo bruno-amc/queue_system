@@ -1,18 +1,19 @@
 import tkinter as tk
 from api_client import get_called_tickets, get_data
 
-last_ticket_count = 0  # Variável para acompanhar o número de tickets
+last_called_count = 0  # Variável para acompanhar o número de tickets chamados
 
 def refresh_display():
-    global last_ticket_count
+    global last_called_count
     data = get_data()
     
-    # Verifica se há novos tickets
-    if len(data['tickets']) != last_ticket_count:
-        last_ticket_count = len(data['tickets'])
+    # Obtém as últimas senhas chamadas
+    called_tickets = get_called_tickets()
+    
+    # Verifica se há novos tickets chamados
+    if len(called_tickets) != last_called_count:
+        last_called_count = len(called_tickets)
         
-        # Obtém as últimas senhas chamadas
-        called_tickets = get_called_tickets()
         if called_tickets:
             current_ticket = called_tickets[-1]
             current_ticket_label.config(text=f"Senha Atual: {current_ticket['id']}\nTipo: {current_ticket['type']}\nPrioridade: {'Sim' if current_ticket['priority'] else 'Não'}")
@@ -26,6 +27,7 @@ def refresh_display():
     
     # Atualiza a cada 20 segundos
     window.after(20000, refresh_display)
+    
 
 # Configuração da interface
 window = tk.Tk()
